@@ -25,6 +25,7 @@ export class ListaTarefasComponent implements OnInit {
   formAberto: boolean = false;
   categoria: string = '';
   validado: boolean = false;
+  indexTarefa: number = -1;
 
   formulario: FormGroup = this.fomBuilder.group({
     id: [0],
