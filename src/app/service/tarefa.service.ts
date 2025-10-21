@@ -8,7 +8,7 @@ import { Tarefa } from '../interface/tarefa';
   providedIn: 'root',
 })
 export class TarefaService {
-  private readonly API = 'http://localhost:3000/tarefas';
+  private readonly API = 'http://localhost:3001/tarefas';
   constructor(private http: HttpClient) {}
 
   listar(categoria: string): Observable<Tarefa[]> {
