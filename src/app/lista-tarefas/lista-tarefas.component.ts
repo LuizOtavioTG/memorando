@@ -4,15 +4,18 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { TarefaService } from 'src/app/service/tarefa.service';
 import { Tarefa } from '../interface/tarefa';
-import { checkButtonTrigger, highlightedStateTrigger, shownStateTrigger } from '../animations';
-
+import { checkButtonTrigger,  highlightedStateTrigger, shownStateTrigger } from '../animations';
 
 @Component({
   selector: 'app-lista-tarefas',
   templateUrl: './lista-tarefas.component.html',
   styleUrls: ['./lista-tarefas.component.css'],
-  animations: [highlightedStateTrigger, shownStateTrigger, checkButtonTrigger]
-})  
+  animations: [
+    highlightedStateTrigger,
+    shownStateTrigger,
+    checkButtonTrigger,
+  ]
+})
 export class ListaTarefasComponent implements OnInit {
   listaTarefas: Tarefa[] = [];
   formAberto: boolean = false;
@@ -20,6 +23,8 @@ export class ListaTarefasComponent implements OnInit {
   validado: boolean = false;
   indexTarefa: number = -1;
   id: number = 0;
+  campoBusca = '';
+  tarefasFiltradas: Tarefa[] = [];
 
   formulario: FormGroup = this.fomBuilder.group({
     id: [0],
@@ -33,13 +38,24 @@ export class ListaTarefasComponent implements OnInit {
     private service: TarefaService,
     private router: Router,
     private fomBuilder: FormBuilder
-  ) { }
+  ) {}
 
   ngOnInit(): Tarefa[] {
     this.service.listar(this.categoria).subscribe((listaTarefas) => {
       this.listaTarefas = listaTarefas;
+      this.tarefasFiltradas = listaTarefas;
     });
-    return this.listaTarefas;
+    return this.tarefasFiltradas;
+  }
+
+  filtrarTarefasPorDescricao(descricao: string) {
+    this.campoBusca = descricao.trim().toLowerCase();
+    if (descricao) {
+      this.tarefasFiltradas = this.listaTarefas.filter(tarefa =>
+        tarefa.descricao.toLowerCase().includes(this.campoBusca));
+    } else {
+      this.tarefasFiltradas = this.listaTarefas;
+    }
   }
 
   mostrarOuEsconderFormulario() {
@@ -112,6 +128,7 @@ export class ListaTarefasComponent implements OnInit {
   }
 
   finalizarTarefa(id: number) {
+    this.id = id
     this.service.buscarPorId(id!).subscribe((tarefa) => {
       this.service.atualizarStatusTarefa(tarefa).subscribe(() => {
         this.listarAposCheck();
@@ -121,7 +138,7 @@ export class ListaTarefasComponent implements OnInit {
 
   listarAposCheck() {
     this.service.listar(this.categoria).subscribe((listaTarefas) => {
-      this.listaTarefas = listaTarefas;
+      this.tarefasFiltradas = listaTarefas;
     });
   }
 

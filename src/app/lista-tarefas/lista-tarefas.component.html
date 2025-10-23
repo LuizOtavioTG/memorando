@@ -4,10 +4,9 @@
       Criar nova tarefa
     </button>
   </div>
-  <form class="formulario ff-prompt"
+  <form @shownState class="formulario ff-prompt"
     [formGroup]="formulario"
-    *ngIf="formAberto"
-    @shownState>
+    *ngIf="formAberto">
     <label for="descricao">Descrição da tarefa</label>
     <input required
       type="text"
@@ -69,10 +68,21 @@
     <img src="assets/imagens/ilustracao-Tarefas.png"
         alt="Ilustração de um ambiente com mesa, computador, quadro e um vaso com planta">
   </div>
-  <div *ngIf="listaTarefas.length > 0, else semTarefas">
+  <div class="busca">
+    <p class="ff-prompt">Procurando o que fazer?</p>
+    <input
+      id="campo-busca" type="search"
+      placeholder="Busque por uma tarefa"
+      [(ngModel)]="campoBusca"
+      (keyup)="filtrarTarefasPorDescricao(campoBusca)">
+  </div>
+  <div *ngIf="tarefasFiltradas.length > 0, else semTarefas">
     <div
+      @filterAnimation
       class="lista-tarefas card-{{ tarefa.categoria }}"
-      *ngFor="let tarefa of listaTarefas; let i  = index" (mouseover)="indexTarefa = i" [@highlightedState]="indexTarefa === i ? 'highlighted': 'default'">
+      *ngFor="let tarefa of tarefasFiltradas; let i = index"
+      (mouseover)="indexTarefa = i"
+      [@highlightedState]="indexTarefa === i ? 'highlighted' : 'default'">
       <div class="info-card">
         <p class="categoria-tarefa categoria-{{ tarefa.categoria }}">
           <img
@@ -86,8 +96,9 @@
         <p class="status-tarefa">
           <button
             [ngClass]="(tarefa.statusFinalizado == true) ? 'icone-checked' : 'icone-unchecked'"
-            (click)="finalizarTarefa(tarefa.id);"
-            [@checkButton]="(tarefa.id === id ? 'checked' : 'unchecked')",>
+            (click)="finalizarTarefa(tarefa.id)"
+            [@checkButton]="(tarefa.id === id ? 'checked' : 'unchecked')"
+            >
           </button>
         </p>
       </div>
@@ -116,4 +127,3 @@
 <ng-template #semTarefas>
   <p class="ng-template ff-prompt">Olá! Ainda não há tarefas por aqui! :)</p>
 </ng-template>
-
