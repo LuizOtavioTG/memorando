@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { TarefaService } from 'src/app/service/tarefa.service';
 import { Tarefa } from '../interface/tarefa';
-import { checkButtonTrigger,  highlightedStateTrigger, shownStateTrigger, filterTrigger } from '../animations';
+import { checkButtonTrigger,  highlightedStateTrigger, shownStateTrigger, filterTrigger, formButtonTrigger } from '../animations';
 
 @Component({
   selector: 'app-lista-tarefas',
@@ -14,7 +14,8 @@ import { checkButtonTrigger,  highlightedStateTrigger, shownStateTrigger, filter
     highlightedStateTrigger,
     shownStateTrigger,
     checkButtonTrigger,
-    filterTrigger
+    filterTrigger,
+    formButtonTrigger,
   ]
 })
 export class ListaTarefasComponent implements OnInit {
@@ -31,8 +32,8 @@ export class ListaTarefasComponent implements OnInit {
     id: [0],
     descricao: ['', Validators.required],
     statusFinalizado: [false, Validators.required],
-    categoria: ['', Validators.required],
-    prioridade: ['', Validators.required],
+    categoria: ['Casa', Validators.required],
+    prioridade: ['Alta', Validators.required],
   });
 
   constructor(
